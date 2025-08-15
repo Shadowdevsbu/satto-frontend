@@ -1,6 +1,5 @@
 import { NavLink } from 'react-router-dom';
 import {
-  FaTachometerAlt,
   FaPen,
   FaTasks,
   FaComments,

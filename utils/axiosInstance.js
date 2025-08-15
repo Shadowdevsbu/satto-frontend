@@ -1,17 +1,17 @@
-import axios, {AxiosError, InternalAxiosRequestConfig} from "axios";
+import axios from "axios";
 
 const API = axios.create({
-    baseURL: 'http://localhost:3000'
+    baseURL: process.env.NEXT_PUBLIC_API_URL,
 })
 
-API.interceptors.request.use((config: InternalAxiosRequestConfig ) => {
+API.interceptors.request.use((config ) => {
         const token = localStorage.getItem('token')
         if(token){
             config.headers.Authorization = `Bearer ${token}`
         }
         return config 
-    }, (error: AxiosError) => {
-    throw error
+    }, (error) => {
+    return Promise.reject(error)
     }
 
     )

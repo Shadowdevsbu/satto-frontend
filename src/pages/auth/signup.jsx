@@ -1,19 +1,39 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import { FcGoogle } from 'react-icons/fc';
+import axios from 'axios';
 
 const SignUp = () => {
   const [email, setEmail] = useState('');
-  const [fname, Fname] = useState('');
+  const [fname, setFname] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [accountType, setAccountType] = useState(null); 
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Sign Up Data:', { email, password, accountType });
-   
+  
+    try {
+      console.log(email, fname, password);
+  
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/auth/signup`,
+        {
+          email,
+          fname,
+          password,
+          role: accountType
+        },
+      );
+      alert(res.data.message);
+    } catch (err) {
+        if (err.response) {
+          console.error('Server Error:', err.response.data);
+          alert(err.response.data.message || 'Signup failed');
+        } 
+    }
   };
+  
 
 const handleGoogle = async () => {
   window.location.href = 'http://localhost:3000/auth/google';
@@ -69,7 +89,7 @@ const handleGoogle = async () => {
             {/* Account Type Selection */}
             <div className="flex space-x-2 pt-2">
               <button
-                type="button"
+                type="submit"
                 onClick={() => setAccountType('student')}
                 className={`w-full py-2 rounded-md text-sm font-medium transition ${
                   accountType === 'student'
@@ -80,7 +100,7 @@ const handleGoogle = async () => {
                 Sign up as a Student
               </button>
               <button
-                type="button"
+                type="submit"
                 onClick={() => setAccountType('solver')}
                 className={`w-full py-2 rounded-md text-sm font-medium transition ${
                   accountType === 'solver'
@@ -91,7 +111,6 @@ const handleGoogle = async () => {
                 Sign up as a Solver
               </button>
             </div>
-
             <button
               type="button"
               className="w-full flex items-center justify-center py-2 border border-gray-300 rounded-md text-sm font-medium bg-white hover:bg-gray-50"
